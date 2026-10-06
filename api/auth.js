@@ -1,7 +1,8 @@
 import axios from 'axios';
 import httpClient from '../services/httpClient';
+import { API_BASE_URL } from '../config/server';
 //========================================================================
-const API_URL = 'https://api.infoeight.com';
+const API_URL = API_BASE_URL;
 
 export const getUserFromUserName = async (phoneNumber) => {
 

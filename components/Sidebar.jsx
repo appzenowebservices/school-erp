@@ -6,6 +6,7 @@ import Image from "next/image";
 import { usePathname, useRouter } from "next/navigation";
 import { getCookie } from "cookies-next";
 import { getSessionCache } from "../utils/sessionCache";
+import { PORTAL_BASE_URL } from "../config/server";
 // ===============================================================
 const context = getSessionCache("dashboardContext");
 
@@ -400,7 +401,7 @@ const downloadRoutes = {
   classDetailsAll: classId => {
     const portal = getPortalParams();
 
-    return `https://portal.infoeight.com/class/folder`
+    return `${PORTAL_BASE_URL}/class/folder`
       + `?client_id=${portal.client_id}`
       + `&guid=${portal.guid}`
       + `&logged_in_user_account_id=${portal.logged_in_user_account_id}`
@@ -411,7 +412,7 @@ const downloadRoutes = {
   classDetailsWithAppUsers: classId => {
     const portal = getPortalParams();
 
-    return `https://portal.infoeight.com`
+    return `${PORTAL_BASE_URL}`
 
       + `/client/classes?&app_users=1`
       ;
@@ -420,7 +421,7 @@ const downloadRoutes = {
   classCHangeXl: classId => {
     const portal = getPortalParams();
 
-    return `https://portal.infoeight.com`
+    return `${PORTAL_BASE_URL}`
 
       + `/client/class-change?id=${portal.client_id}&format=SOFT COPY`
       ;
@@ -430,7 +431,7 @@ const downloadRoutes = {
   classCHangeXls: classId => {
     const portal = getPortalParams();
 
-    return `https://portal.infoeight.com`
+    return `${PORTAL_BASE_URL}`
 
       + `/client/download-students-image?id=${portal.client_id}`
       ;

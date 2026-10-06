@@ -12,6 +12,7 @@ import {
 import { getSessionCache } from "../../../../utils/sessionCache";
 import Layout from "../../../../layouts/Layout";
 import { getStudentRecordFields } from "../../../../api/student";
+import { PORTAL_BASE_URL } from "../../../../config/server";
 
 // -------------------------------------------------
 function getFileIcon(name) {
@@ -119,7 +120,7 @@ export default function DownloadStudentDataPage() {
 
   function handleDownload() {
     const finalUrl =
-      `https://portal.infoeight.com/${downloadUrl}` +
+      `${PORTAL_BASE_URL}/${downloadUrl}` +
       `&classIds=${selectedClasses.join(",")}` +
       `&fields=${selectedFields.join(",")}` +
       `&format=${format}`;

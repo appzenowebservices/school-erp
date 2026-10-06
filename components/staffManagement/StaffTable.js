@@ -14,6 +14,7 @@ import { ChevronDown, MoreHorizontal } from "lucide-react";
 import { RiAdminFill } from "react-icons/ri";
 import ConfirmationDialogueBox from "../ui/status/Confirmation";
 import EditClassPermissionsModal from "./EditClassPermissionsModal";
+import { PORTAL_BASE_URL } from "../../config/server";
 import SignatureUploadModal from "./UploadSignature";
 import { editClassPermissionsApi, getPermittedClasses, removeFromClientApi } from "../../api/staff";
 import { getCookie } from "cookies-next";
@@ -149,7 +150,7 @@ const StaffTable = ({
     const portal = getPortalParams();
 
 
-    const url = `https://portal.infoeight.com/users/download-excel`
+    const url = `${PORTAL_BASE_URL}/users/download-excel`
       + `?client_id=${portal.client_id}`
       + `&guid=${portal.guid}`
       + `&logged_in_user_account_id=${portal.logged_in_user_account_id}`
@@ -167,7 +168,7 @@ const StaffTable = ({
     const portal = getPortalParams();
 
 
-    const url = `https://portal.infoeight.com/download-staff-signature-list-pdf`
+    const url = `${PORTAL_BASE_URL}/download-staff-signature-list-pdf`
       + `?client_id=${portal.client_id}`
       + `&guid=${portal.guid}`
       + `&logged_in_user_account_id=${portal.logged_in_user_account_id}`

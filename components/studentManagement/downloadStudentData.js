@@ -9,6 +9,7 @@ import {
     Download
 } from "lucide-react";
 import { getSessionCache } from "../../utils/sessionCache";
+import { PORTAL_BASE_URL } from "../../config/server";
 // ==================================================================
 // ==================================================================
 export default function DownloadStudentData() {
@@ -377,7 +378,7 @@ export default function DownloadStudentData() {
                                         </p>
                                         {item.sub_menu.map((sub, subIndex) => {
                                             if (!hasPermission(sub.permission)) return null;
-                                            const url = `https://portal.infoeight.com/${sub.url}`
+                                            const url = `${PORTAL_BASE_URL}/${sub.url}`
 
                                             return (
                                                 <a

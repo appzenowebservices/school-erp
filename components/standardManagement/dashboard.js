@@ -187,7 +187,7 @@
 //             const portal = getPortalParams();
 
 
-//         const url =`https://portal.infoeight.com/download-student-report`
+//         const url =`${PORTAL_BASE_URL}/download-student-report`
 //                 + `?client_id=${portal.client_id}`
 //                 + `&guid=${portal.guid}`
 //                 + `&logged_in_user_account_id=${portal.logged_in_user_account_id}`
@@ -410,7 +410,7 @@
 //         folder: classId => {
 //             const portal = getPortalParams();
 
-//             return `https://portal.infoeight.com/class/folder`
+//             return `${PORTAL_BASE_URL}/class/folder`
 //                 + `?client_id=${portal.client_id}`
 //                 + `&guid=${portal.guid}`
 //                 + `&logged_in_user_account_id=${portal.logged_in_user_account_id}`
@@ -421,7 +421,7 @@
 //         idCard: classId => {
 //             const portal = getPortalParams();
 
-//             return `https://portal.infoeight.com/class/id-card`
+//             return `${PORTAL_BASE_URL}/class/id-card`
 //                 + `?client_id=${portal.client_id}`
 //                 + `&guid=${portal.guid}`
 //                 + `&logged_in_user_account_id=${portal.logged_in_user_account_id}`
@@ -432,7 +432,7 @@
 //         admitCard: classId => {
 //             const portal = getPortalParams();
 
-//             return `https://portal.infoeight.com/class/id-card`
+//             return `${PORTAL_BASE_URL}/class/id-card`
 //                 + `?client_id=${portal.client_id}`
 //                 + `&guid=${portal.guid}`
 //                 + `&logged_in_user_account_id=${portal.logged_in_user_account_id}`
@@ -445,7 +445,7 @@
 //         studentData: classId => {
 //             const portal = getPortalParams();
 
-//             return `https://portal.infoeight.com/class/student-data`
+//             return `${PORTAL_BASE_URL}/class/student-data`
 //                 + `?client_id=${portal.client_id}`
 //                 + `&guid=${portal.guid}`
 //                 + `&logged_in_user_account_id=${portal.logged_in_user_account_id}`
@@ -457,7 +457,7 @@
 //         ptmSheet: classId => {
 //             const portal = getPortalParams();
 
-//             return `https://portal.infoeight.com/class/download-ptm-sheet`
+//             return `${PORTAL_BASE_URL}/class/download-ptm-sheet`
 //                 + `?client_id=${portal.client_id}`
 //                 + `&guid=${portal.guid}`
 //                 + `&logged_in_user_account_id=${portal.logged_in_user_account_id}`
@@ -469,7 +469,7 @@
 //         studentDetails: classId => {
 //             const portal = getPortalParams();
 
-//             return `https://portal.infoeight.com/class/student-data`
+//             return `${PORTAL_BASE_URL}/class/student-data`
 //                 + `?client_id=${portal.client_id}`
 //                 + `&guid=${portal.guid}`
 //                 + `&logged_in_user_account_id=${portal.logged_in_user_account_id}`
@@ -481,7 +481,7 @@
 
 //         proofReadingSoft: classId => {
 //             const p = getPortalParams();
-//             return `https://portal.infoeight.com/class/proof-reading`
+//             return `${PORTAL_BASE_URL}/class/proof-reading`
 //                 + `?client_id=${p.client_id}`
 //                 + `&guid=${p.guid}`
 //                 + `&logged_in_user_account_id=${p.logged_in_user_account_id}`
@@ -492,7 +492,7 @@
 
 //         proofReadingHard: classId => {
 //             const p = getPortalParams();
-//             return `https://portal.infoeight.com/class/proof-reading`
+//             return `${PORTAL_BASE_URL}/class/proof-reading`
 //                 + `?client_id=${p.client_id}`
 //                 + `&guid=${p.guid}`
 //                 + `&logged_in_user_account_id=${p.logged_in_user_account_id}`
@@ -1283,6 +1283,7 @@ import { useRouter } from 'next/navigation';
 
 // Internal Components/Utils
 import { getSessionCache } from '../../utils/sessionCache';
+import { PORTAL_BASE_URL } from '../../config/server';
 import { addClass, arrangeRollNosApi, editClass, removeAllStudentApi } from '../../api/classes';
 import { addStandard } from '../../api/standards';
 import { useStudent } from '../../context/studentContext';
@@ -1369,7 +1370,7 @@ const StandardsClassesManagementDashboard = ({ setReloadKey }) => {
 
     const downloadExcel = () => {
         const p = getPortalParams();
-        const url = `https://portal.infoeight.com/download-student-report?client_id=${p.client_id}&guid=${p.guid}&logged_in_user_account_id=${p.logged_in_user_account_id}&user_account_id=${p.user_account_id}&format=SOFT-COPY`;
+        const url = `${PORTAL_BASE_URL}/download-student-report?client_id=${p.client_id}&guid=${p.guid}&logged_in_user_account_id=${p.logged_in_user_account_id}&user_account_id=${p.user_account_id}&format=SOFT-COPY`;
         window.open(url, "_blank");
         setExportDropdownOpen(false);
     };
@@ -1451,13 +1452,13 @@ const StandardsClassesManagementDashboard = ({ setReloadKey }) => {
     const handleDownload = (classData, action) => {
         const p = getPortalParams();
         const routes = {
-            folder: id => `https://portal.infoeight.com/class/folder?client_id=${p.client_id}&guid=${p.guid}&logged_in_user_account_id=${p.logged_in_user_account_id}&user_account_id=${p.user_account_id}&id=${id}`,
-            admitCard: id => `https://portal.infoeight.com/class/folder?client_id=${p.client_id}&guid=${p.guid}&logged_in_user_account_id=${p.logged_in_user_account_id}&user_account_id=${p.user_account_id}&id=${id}`,
-            idCard: id => `https://portal.infoeight.com/class/id-card?client_id=${p.client_id}&guid=${p.guid}&logged_in_user_account_id=${p.logged_in_user_account_id}&user_account_id=${p.user_account_id}&id=${id}`,
-            ptmSheet: id => `https://portal.infoeight.com/class/download-ptm-sheet?client_id=${p.client_id}&guid=${p.guid}&logged_in_user_account_id=${p.logged_in_user_account_id}&user_account_id=${p.user_account_id}&class_id=${id}`,
-            studentData: id => `https://portal.infoeight.com/class/student-data?client_id=${p.client_id}&guid=${p.guid}&logged_in_user_account_id=${p.logged_in_user_account_id}&user_account_id=${p.user_account_id}&id=${id}`,
-            proofReadingSoft: id => `https://portal.infoeight.com/class/proof-reading?client_id=${p.client_id}&guid=${p.guid}&logged_in_user_account_id=${p.logged_in_user_account_id}&user_account_id=${p.user_account_id}&id=${id}&format=SOFT COPY`,
-            proofReadingHard: id => `https://portal.infoeight.com/class/proof-reading?client_id=${p.client_id}&guid=${p.guid}&logged_in_user_account_id=${p.logged_in_user_account_id}&user_account_id=${p.user_account_id}&id=${id}&format=HARD COPY`,
+            folder: id => `${PORTAL_BASE_URL}/class/folder?client_id=${p.client_id}&guid=${p.guid}&logged_in_user_account_id=${p.logged_in_user_account_id}&user_account_id=${p.user_account_id}&id=${id}`,
+            admitCard: id => `${PORTAL_BASE_URL}/class/folder?client_id=${p.client_id}&guid=${p.guid}&logged_in_user_account_id=${p.logged_in_user_account_id}&user_account_id=${p.user_account_id}&id=${id}`,
+            idCard: id => `${PORTAL_BASE_URL}/class/id-card?client_id=${p.client_id}&guid=${p.guid}&logged_in_user_account_id=${p.logged_in_user_account_id}&user_account_id=${p.user_account_id}&id=${id}`,
+            ptmSheet: id => `${PORTAL_BASE_URL}/class/download-ptm-sheet?client_id=${p.client_id}&guid=${p.guid}&logged_in_user_account_id=${p.logged_in_user_account_id}&user_account_id=${p.user_account_id}&class_id=${id}`,
+            studentData: id => `${PORTAL_BASE_URL}/class/student-data?client_id=${p.client_id}&guid=${p.guid}&logged_in_user_account_id=${p.logged_in_user_account_id}&user_account_id=${p.user_account_id}&id=${id}`,
+            proofReadingSoft: id => `${PORTAL_BASE_URL}/class/proof-reading?client_id=${p.client_id}&guid=${p.guid}&logged_in_user_account_id=${p.logged_in_user_account_id}&user_account_id=${p.user_account_id}&id=${id}&format=SOFT COPY`,
+            proofReadingHard: id => `${PORTAL_BASE_URL}/class/proof-reading?client_id=${p.client_id}&guid=${p.guid}&logged_in_user_account_id=${p.logged_in_user_account_id}&user_account_id=${p.user_account_id}&id=${id}&format=HARD COPY`,
         };
         if (routes[action]) window.open(routes[action](classData.id), "_blank");
         setOpenDropdownId(null);
