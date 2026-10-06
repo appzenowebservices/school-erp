@@ -1,0 +1,15 @@
+Support/Ops (Boni/Piyasha team):
+1. Ticket solver — paste "duplicate father + same phone" or "grade not updating" → agent pulls Sessions, runs ERP tools, replies with fix + draft to school. Today: manual portal hunt.
+2. Excel audit service — drop school setup.xlsx → returns missing SMS numbers, working-days mismatch, duplicate names. Today: eyes in sheets (5a/5b).
+3. Changeover runner — March job via Cron + Kanban: promotion preview, optional-subject carry (IX-A maths case), fee-link check, ops approves. Today: most dreaded manual week.
+4. Marks-season detective — "why totals wrong in X-A?" → checks rounding flag, grade-rule version, leftover 0s from removed optionals. Today: Reset button per class.
+5. Morning digest — cron: failed parent logins, low SMS balance, attendance gaps, defaulter spike → one Telegram/Slack post to ops. Today: found when school shouts.
+6. Institutional memory — Sessions FTS5 search: "how did we fix concession-optional for DPS last year?" → past transcript + skill used.
+Sales:
+7. Live demo on real data — Chat page with ERP tools: "show defaulters >30d and draft Hindi letter" — closes deals, not slides.
+8. Onboarding estimator — upload prospect Excel → go-live checklist + effort days in 2 min → quote faster.
+
+
+
+
+opencode -s ses_f3c7e0f88ffejFU7tAwi5hK7vN

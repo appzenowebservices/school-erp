@@ -1,0 +1,24 @@
+.mood-switcher {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 20px;
+  background: #fff5e1;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  font-family: 'Poppins', sans-serif;
+}
+
+.mood-switcher label {
+  font-weight: 500;
+  color: #6a4c27;
+}
+
+.mood-switcher select {
+  padding: 6px 10px;
+  border: 1px solid #d9b97f;
+  border-radius: 4px;
+  background-color: #fffaf2;
+  color: #333;
+  font-size: 1rem;
+}

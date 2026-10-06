@@ -1,0 +1,272 @@
+@import "tailwindcss";
+
+:root {
+  --color-yellow: yellow;
+  --color-orange: #feaa26;
+  --color-white: #ffffff;
+  --color-blue: #253b7d;
+  --color-black: #000000;
+  --color-gray-text: #e6e6e6;
+  --color-gray: #bcc3ca;
+  --color-red: #ff0000;
+  --color-green: #008000;
+  --color-semi-gray: #00000029;
+  --color-light-blue: #f3f9ff;
+  --color-transparent: rgba(0, 0, 0, 0);
+  --color-app-background: #ea0029;
+  --color-semi-transparent: #00000050;
+  --color-semi-transparent-5: #00000005;
+  --color-semi-transparent-10: #00000010;
+  --color-semi-transparent-18: #00000018;
+  --color-semi-transparent-25: #00000025;
+  --color-semi-transparent-30: #00000030;
+  --color-semi-transparent-33: #00000033;
+  --color-semi-transparent-40: #00000040;
+  --color-semi-transparent-60: #00000060;
+  --color-navy-blue: #15487d;
+  --color-dark-blue: #007aff;
+  --color-student-blue: #3069a0;
+  --color-blue-text: #1982ef;
+  --color-blue-text-10: #1982ef10;
+  --color-blue-color-20: #1982ef20;
+  --color-blue-color-40: #1982ef05;
+  --color-semi-black: rgba(0, 0, 0, 1);
+  --color-black-50: rgba(0, 0, 0, 0.5);
+  --color-black-20: rgba(0, 0, 0, 0.2);
+  --color-black-10: rgba(0, 0, 0, 0.1);
+  --color-black-0-5: rgba(0, 0, 0, 0.05);
+  --color-semi-white: rgba(255, 255, 255, 0.5);
+  --color-semi-white-transparent: rgba(255, 255, 255, 0.3);
+  --color-light-black: #333333;
+  --color-border-shadow: #ddd;
+  --color-shadow: #000;
+  --color-linear-gradient-x-one: #1981ee;
+  --color-linear-gradient-y-one: #15487d;
+  --color-splash-sub-heading: #3d362c;
+  --color-image-background: #e4e6e7;
+  --color-light-gray: #7676801f;
+  --color-add: #fcb918;
+  --color-ads-badge: #ffb800;
+  --color-placeholder: #999999;
+  --color-debit: #ed4a3c;
+  --color-credit: #2c992d;
+  --color-thin-border-line: #bcbcbc;
+  --color-reward-dialog-bg: #fee189;
+  --color-continue-button-bg: #fea613;
+  --color-separator-line-1: #707070;
+  --color-separator-line-2: #70707010;
+  --color-separator-line-3: #3c3c435c;
+  --color-separator-line-4: #cdcdcd;
+  --color-alert-dialog-separator: #70707020;
+  --color-alert-dialog-success: #2c992d;
+  --color-alert-dialog-error: #e2202c;
+  --color-alert-dialog-information: #1982ef;
+  --color-alert-dialog-warning: #fd9727;
+  --color-slider-bar-tint: #1982ef;
+  --color-slider-bar-minimum-track: #00000015;
+  --color-description-text: #666666;
+  --color-background: #00000005;
+  --color-linear-gradient-start: #1981ee;
+  --color-linear-gradient-end: #15487d;
+  --color-debug-mode-background: rgba(255, 0, 0, 0.5);
+  --color-button-disabled-background: #eeeeee;
+  --color-field-view-card-background: #1981ee1a;
+  --color-field-view-card-border: #0000001a;
+  --color-due-date: #ff3b30;
+  --color-delete-option: #ff3b30;
+  --color-paid-on: #58a932;
+  --color-green-text: #58a932;
+  --color-mode: #1982ef;
+  --color-radio-border: #979797;
+  --color-signup-back: #e7f2fe;
+  --color-box-gray: #f2f2f2;
+  --color-leave: #ffa351;
+  --color-not-marked: #1981ee;
+  --color-group-detail: #fe646f;
+  --color-calendar-day-name: #3c3c43;
+  --color-button-background: #e2e2e2;
+  --color-sea-green: #25887e;
+  --color-go-premium: #fd5900;
+  --color-menu-item-text: #cccccc;
+  --color-gradient-1: #ffde00;
+  --color-gradient-2: #fd5900;
+  --color-recommended: #fc5830;
+  --color-button-background-two: #fd9728;
+  --color-badge-bg: #ff8a64;
+  --color-olive-green: #159588;
+  --color-light-blue-background: #e7f2fe;
+}
+
+@theme {
+  /* Font Families */
+  --font-display: "Poppins", sans-serif;
+  /* Modern and friendly */
+  --font-body: "Poppins", sans-serif;
+
+  /* Brand Colors (Food Delivery Theme) */
+  --color-background: #FFFAF0;
+  /* Warm and inviting */
+  --color-background-section: #FFFFFF;
+  /* Pure white */
+
+  --color-primary: #FF4500;
+  /* Vibrant Orange (Call-to-action) */
+  --color-primary-muted: #FF6F3C;
+  /* Softer Orange (Hover/Muted) */
+  --color-background-muted: #d1d5dc;
+  /* Muted grey text for hints */
+
+  --color-secondary: #32CD32;
+  /* Fresh Green (Healthy Vibes) */
+  --color-accent: #0f345a;
+  /* Golden Yellow (Highlights) */
+  --color-accent-muted: #f7e5e7;
+  /* Golden Yellow (Highlights) */
+  --color-dark: #2D2D2D;
+  /* Deep Grey (Text and Dark Mode) */
+
+  /* Text Colors */
+  --color-primary-text: #3E2723;
+  /* Dark Grey (Readable Body) */
+  --color-secondary-text: #5D4037;
+  /* Light Grey (Subtext) */
+
+  --color-primary-text-inverse: #FFFFFF;
+  /* For dark backgrounds */
+  --color-text-muted: #9E9E9E;
+  /* Muted grey text for hints */
+
+  /* Status Colors */
+  --color-success: #00C853;
+  /* Bright Green (Order Success) */
+  --color-error: #D32F2F;
+  /* Red (Order Failure/Error) */
+  --color-warning: #FF9800;
+  /* Orange (Caution) */
+  --color-info: #2196F3;
+  /* Blue (Information) */
+
+  /* Font Sizes */
+  --text-xs: 0.75rem;
+  /* 12px */
+  --text-sm: 0.875rem;
+  /* 14px */
+  --text-base: 1rem;
+  /* 16px */
+  --text-lg: 1.125rem;
+  /* 18px */
+  --text-xl: 1.5rem;
+  /* 24px (Feature Headers) */
+  --text-2xl: 2rem;
+  /* 32px (Section Headers) */
+  --text-3xl: 2.5rem;
+  /* 40px (Hero Headline) */
+
+  /* Shadows (Soft and subtle) */
+  --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.1);
+  --shadow-md: 0 4px 8px rgba(0, 0, 0, 0.12);
+  --shadow-lg: 0 10px 20px rgba(0, 0, 0, 0.15);
+
+  /* Borders (Rounded for modern UX) */
+  --border-radius-sm: 0.375rem;
+  /* 6px */
+  --border-radius-md: 0.75rem;
+  /* 12px */
+  --border-radius-lg: 1.5rem;
+  /* 24px */
+
+  /* Transitions (Smooth interactions) */
+  --ease-fluid: cubic-bezier(0.3, 0, 0, 1);
+  --ease-snappy: cubic-bezier(0.2, 0, 0, 1);
+
+  /* Layout (Responsive Breakpoints) */
+  --breakpoint-sm: 640px;
+  /* Small Screens */
+  --breakpoint-md: 768px;
+  /* Tablets */
+  --breakpoint-lg: 1024px;
+  /* Laptops */
+  --breakpoint-xl: 1280px;
+  /* Desktops */
+  --breakpoint-3xl: 1440px;
+  /* Large Screens */
+
+  /* Z-Index (Layering UI Elements) */
+  --z-index-overlay: 999;
+  --z-index-modal: 1000;
+  --z-index-tooltip: 1100;
+}
+
+
+body {
+  font-family: var(--font-body);
+}
+
+
+
+
+.dark {
+  /* Solarized-Inspired Dark Colors */
+  --base-background: #171717;
+  --color-background-section: #212121;
+  /* Pure white */
+
+  /* Dark cyan (Base03) */
+  --base-primary-text: #cfcfcf;
+  /* Light cyan (Base0) */
+  --base-secondary-text: #93a1a1;
+  /* Base1 */
+  --base-accent: #f0303e;
+  /* Magenta (for highlights) */
+  --base-muted: #073642;
+  /* Darker background (Base02) */
+
+  /* Semantic Aliases */
+  --color-background: var(--base-background);
+  --color-primary-text: var(--base-primary-text);
+  --color-secondary-text: var(--base-secondary-text);
+  --color-accent: var(--base-accent);
+  --color-muted: var(--base-muted);
+}
+
+
+.scrollbar::-webkit-scrollbar {
+  width: 8px;
+}
+
+.scrollbar::-webkit-scrollbar-track {
+  background: var(--color-dark-blue);
+  /* Scrollbar Track */
+  border-radius: 10px;
+}
+
+.scrollbar::-webkit-scrollbar-thumb {
+  background: var(--color-dark-blue);
+  /* Scrollbar Thumb */
+  border-radius: 10px;
+}
+
+.scrollbar::-webkit-scrollbar-thumb:hover {
+  background: var(--color-dark-blue);
+  /* Hover Color */
+}
+
+
+
+@layer utilities {
+  @keyframes slide-down {
+    from {
+      opacity: 0;
+      transform: translateY(-2rem);
+    }
+
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  .animate-slide-down {
+    animation: slide-down .51s ease-out;
+  }
+}

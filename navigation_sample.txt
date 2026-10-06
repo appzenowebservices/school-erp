@@ -1,0 +1,438 @@
+<?php
+
+function getSideMenu() {
+    $menu = array();
+    $clientId = null;
+    $previous7Days = new DateTime('7 days ago');
+    $client = \jntreport\Auth\Auth::getClientDetails();
+    if (!is_null($client)) {
+        $clientId = $client['id'];
+        $products = jntreport\Auth\Auth::getProducts($clientId);
+        $userAccountProfileType = jntreport\Auth\Auth::getUserAccountProfileType($clientId);
+        $school = \jntreport\Auth\Auth::getSchool($clientId);
+        if ($userAccountProfileType == "student") {
+            $studentId = jntreport\Auth\Auth::getUserAccountProfileModelId($clientId);
+            $menu[] = array("name" => "DASHBOARD", "permission" => "client.getCurrentStatus", "download" => false, "icon" => "side-menu-icons/dashboard.png", "url" => "/client/dashboard", "sub_menu" => array());
+            $productMenu = array(
+                "STUDENT MANAGEMENT" => array("icon" => "side-menu-icons/student_managment.png",
+                    "sub_menu" => array(
+                        array("name" => "Profile", "is_quick_link" => true, "permission" => "student.getDetails", "download" => false, "url" => "student-profile?id=" . $studentId, "sub_menu" => array()),
+                        array("name" => "Update Information", "is_quick_link" => false, "permission" => "student.setBankAccountDetails", "download" => false, "url" => "update-student-information", "sub_menu" => array())
+                    )
+                ),
+                "REPORT CARD" => array("icon" => "side-menu-icons/report_card.png",
+                    "sub_menu" => array(array("name" => "Academic Profile", "is_quick_link" => true, "permission" => "student.getReportCardsAndAnalyticalSheets", "download" => false, "url" => "student/report-cards?id=" . $studentId, "sub_menu" => array()))
+                ),
+                "MOBITENDANCE" => array("icon" => "side-menu-icons/mobiTENDANCE.png", "sub_menu" => array(
+                        array("name" => "Attendance Report", "is_quick_link" => true, "permission" => "student.getAttendance", "download" => false, "url" => "student/attendance-report?id=" . $studentId . "&start_date=" . date('Y-m-01') . "&end_date=" . date('Y-m-t'), "sub_menu" => array()),
+                        array("name" => "Leave Applications", "permission" => "studentLeave.getList", "download" => false, "icon" => "side-menu-icons/one.png", "url" => "student-leaves", "sub_menu" => array()),
+                    )),
+                "SMS CIRCULAR" => array("icon" => "side-menu-icons/sms_circular.png", "sub_menu" => array(
+                        array("name" => "View Notices", "is_quick_link" => true, "permission" => "notice.getList", "download" => false, "icon" => "side-menu-icons/one.png", "url" => "notices", "sub_menu" => array()),
+                    )),
+                "HOMEWORK MESSAGE" => array("icon" => "side-menu-icons/homework_message.png", "sub_menu" => array(
+                        array("name" => "View Homework", "is_quick_link" => true, "permission" => "homeworkReminder.getList", "download" => false, "icon" => "side-menu-icons/one.png", "url" => "homework-reminders", "sub_menu" => array()),
+                    )),
+                "ONLINE FEE" => array("icon" => "side-menu-icons/online_fee.png",
+                    "sub_menu" => array(
+                        array("name" => "Fee Summary", "is_quick_link" => true, "permission" => "student.getFees", "download" => false, "conditions" => array(($clientId == 565)), "url" => "student/fee-payments?id=" . $studentId, "sub_menu" => array())
+                    )
+                ),
+                "ONLINE EXAM" => array("icon" => "side-menu-icons/online_exam.png",
+                    "sub_menu" => array(array("name" => "Online Quiz", "is_quick_link" => true, "permission" => "quiz.getList", "download" => false, "url" => "quizzes", "sub_menu" => array()))
+                ),
+                "DOCUMENTS" => array("icon" => "side-menu-icons/online_exam.png",
+                    "sub_menu" => array(array("name" => "Download Documents", "is_quick_link" => true, "permission" => "", "download" => false, "url" => "student-documents?id=" . $studentId, "sub_menu" => array()))
+                ),
+                "GALLERY" => array("icon" => "side-menu-icons/gallery.png",
+                    "sub_menu" => array(
+                        array("name" => "Album", "permission" => "album.getList", "is_quick_link" => true, "download" => false, "icon" => "side-menu-icons/one.png", "url" => "album", "sub_menu" => array())
+                    )),
+                "Online Classes" => array("icon" => "side-menu-icons/gps.png", "sub_menu" => array(
+                        array("name" => "Meetings", "permission" => "meeting.getList", "is_quick_link" => true, "download" => false, "icon" => "side-menu-icons/one.png", "url" => "meetings", "sub_menu" => array())
+                    )),
+                "Teacher Review" => array("icon" => "side-menu-icons/gps.png", "sub_menu" => array(
+                        array("name" => "Polls", "is_quick_link" => true, "permission" => "poll.getList", "download" => false, "icon" => "side-menu-icons/one.png", "url" => "polls", "sub_menu" => array())
+                    )),
+                "Digital Content" => array("icon" => "side-menu-icons/gps.png", "sub_menu" => array(
+                        array("name" => "List", "permission" => "student.getDigitalContent", "is_quick_link" => true, "download" => false, "icon" => "side-menu-icons/one.png", "url" => "videos-and-solutions", "sub_menu" => array())
+                    ))
+            );
+        } else {
+//PRODUCT WISE MENU            
+            $menu[] = array("name" => "DASHBOARD", "permission" => "client.getCurrentStatus", "download" => false, "icon" => "side-menu-icons/dashboard.png", "url" => "/client/dashboard", "sub_menu" => array());
+            $productMenu = array(
+                "ERP MANAGEMENT" => array("icon" => "side-menu-icons/erp.png",
+                    "sub_menu" => array(
+                        array("name" => "Setup", "permission" => "client.getSetupData", "download" => false, "is_quick_link" => true, "icon" => "side-menu-icons/one.png", "url" => "client/setup?id=" . $clientId, "sub_menu" => array()),
+//                        array("name" => "Login Timings", "permission" => "client.getLoginTimings", "download" => false, "icon" => "side-menu-icons/one.png", "url" => "client/login-timings?id=" . $clientId, "sub_menu" => array()),
+                        array("name" => "Images", "permission" => "client.getSetupData", "download" => false, "icon" => "side-menu-icons/one.png", "url" => "client/images?id=" . $clientId, "sub_menu" => array()),
+//                        array("name" => "Empty Folders", "permission" => "client.getSetupData", "download" => false, "icon" => "side-menu-icons/one.png", "url" => "client/empty-folders?id=" . $clientId, "sub_menu" => array()),
+                        array("name" => "Permissions", "permission" => "client.grantPermissions", "is_quick_link" => true, "download" => false, "icon" => "side-menu-icons/one.png", "url" => "client/set-permission?id=" . $clientId, "sub_menu" => array()),
+//                        array("name" => "School Buildings", "permission" => "schoolBuilding.getList", "download" => false, "icon" => "side-menu-icons/one.png", "url" => "school/school-buildings", "sub_menu" => array()),
+                        array("name" => "Send Email To School", "permission" => "client.sendEmail", "download" => false, "icon" => "side-menu-icons/one.png", "url" => "send-email"),
+                        array("name" => "Emails List", "permission" => "client.sendEmail", "download" => false, "icon" => "side-menu-icons/one.png", "url" => "emails", "sub_menu" => array()),
+                        array("name" => "Download Envelope", "permission" => "client.getDeliveryAddress", "download" => false, "icon" => "side-menu-icons/one.png", "url" => "", "sub_menu" => array(
+                                array("name" => "A4", "permission" => "client.getDeliveryAddress", "download" => false, "icon" => "side-menu-icons/one.png", "url" => "client/delivery-address?id=" . $clientId),
+                                array("name" => "Envelope SE6", "permission" => "client.getDeliveryAddress", "download" => false, "icon" => "side-menu-icons/one.png", "url" => "client/delivery-address?id=" . $clientId . "&envalope=true")
+                            )),
+                        array("name" => "Set Pricing", "permission" => "client.setProducts", "download" => false, "icon" => "side-menu-icons/one.png", "url" => "client/set-pricing", "conditions" => array(\jntreport\Auth\Auth::isInternal()), "sub_menu" => array()),
+                        array("name" => "Track Number of Students Year Wise", "permission" => "client.trackStudentRecordYearWise", "download" => false, "icon" => "side-menu-icons/one.png", "url" => "client/track-no-of-students", "conditions" => array(\jntreport\Auth\Auth::isInternal()), "sub_menu" => array()),
+                        array("name" => "Staff Usage Report", "permission" => "client.getStaffReport", "download" => false, "icon" => "side-menu-icons/one.png", "url" => "staff-report?start_date=" . date('Y-m-d', strtotime('-1 month')) . "&end_date=" . date('Y-m-d'), "sub_menu" => array())
+                    )),
+                "STANDARD MANAGEMENT" => array("icon" => "side-menu-icons/standard_managment.png",
+                    "sub_menu" => array(
+                        array("name" => "All Standards", "permission" => "standard.getList", "download" => false, "icon" => "side-menu-icons/one.png", "url" => "standards", "sub_menu" => array()),
+                        array("name" => "All Classes", "permission" => "classRoom.getList", "download" => false, "icon" => "side-menu-icons/one.png", "url" => "classes", "sub_menu" => array()),
+                        array(
+                            "name" => "Class Details",
+                            "permission" => "classRoom.getList",
+                            "download" => false, 
+                            "icon" => "side-menu-icons/one.png",
+                            "url" => "#",
+                            "sub_menu" => array(
+                                array(
+                                    "name" => "All",
+                                     "permission" => "classRoom.getList",
+                                      "download" => false,
+                                       "icon" => "side-menu-icons/one.png",
+                                 "url" => "client/classes?date=" . date('Y-m-d'), "sub_menu" => array()),
+                                array(
+                                    "name" => "With App Users",
+                                     "permission" => "classRoom.getList",
+                                      "download" => false,
+                                       "icon" => "side-menu-icons/one.png",
+                                 "url" => "client/classes?&app_users=1", 
+                                 "sub_menu" => array()))),
+                        array("name" => "Class Change", "permission" => "client.getClassChange", "download" => false, "icon" => "side-menu-icons/one.png", "url" => "#", "sub_menu" => array(
+                                array(
+                                    "name" => ".xls",
+                                     "permission" => "client.getClassChange",
+                                      "download" => false, 
+                                      "icon" => "side-menu-icons/one.png",
+                                       "url" => "client/class-change?id=" . $clientId . "&format=SOFT COPY",
+                                        "sub_menu" => array()),
+//                                array("name" => ".pdf", "permission" => "client.getClassChange", "download" => false, "icon" => "side-menu-icons/one.png", "url" => "client/class-change?id=" . $clientId . "&format=HARD COPY", "sub_menu" => array()),
+                                array("name" => "Student Renew", "permission" => "classRoom.setStudentRenewList", "download" => false, "icon" => "side-menu-icons/one.png", "url" => "student-renew", "sub_menu" => array()))),
+                        array("name" => "Bulk Promotion", "permission" => "client.getPromotionList", "download" => false, "icon" => "side-menu-icons/one.png", "url" => "bulk-promotion", "sub_menu" => array()),
+                        array("name" => "Shuffle Sections", "permission" => "client.shuffleSections", "download" => false, "icon" => "side-menu-icons/one.png", "url" => "shuffle-section", "sub_menu" => array())
+                    )),
+                "STUDENT MANAGEMENT" => array("icon" => "side-menu-icons/student_managment.png",
+                    "sub_menu" => array(
+                        array("name" => "All Students", "permission" => "student.getList", "download" => false, "icon" => "side-menu-icons/one.png", "url" => "students?status=ACTIVE", "sub_menu" => array()),
+                        array("name" => "Add Student", "permission" => "student.add", "is_quick_link" => true, "download" => false, "icon" => "side-menu-icons/one.png", "url" => "add-edit-student", "sub_menu" => array()),
+                        array("name" => "Houses", "permission" => "house.getList", "download" => false, "icon" => "side-menu-icons/one.png", "url" => "houses", "sub_menu" => array()),
+                        array("name" => "Uploads", "permission" => "client.getSetupData", "download" => false, "icon" => "side-menu-icons/one.png", "url" => "student-uploads?id=" . $clientId, "sub_menu" => array()),
+                        array("name" => "Download Student Data", "permission" => "client.getSetupData", "is_quick_link" => true, "download" => false, "icon" => "side-menu-icons/one.png", "url" => "student-downloads?client_id=" . $clientId, "sub_menu" => array()),
+                        array("name" => "Verify Images", "permission" => "client.verifyStudentImages", "download" => false, "icon" => "side-menu-icons/one.png", "url" => "students/verify-images", "sub_menu" => array()),
+                        array("name" => "Proof Reading", "permission" => "client.getProofReadingData", "download" => false, "icon" => "side-menu-icons/one.png", "url" => "proof-reading?id=" . $clientId, "sub_menu" => array()),
+                        array("name" => "Parents", "permission" => "studentParent.getList", "download" => false, "icon" => "side-menu-icons/one.png", "url" => "client/student-parents", "sub_menu" => array()),
+                        array("name" => "Siblings", "permission" => "studentParent.getList", "download" => false, "icon" => "side-menu-icons/one.png", "url" => "siblings", "sub_menu" => array()),
+//                        array("name" => "Admission Register", "permission" => "admissionRegister.getList", "download" => false, "icon" => "side-menu-icons/one.png", "url" => "admission-registers", "sub_menu" => array()),
+                        array("name" => "Birthdays", "permission" => "client.getRecentBirthdayList", "download" => false, "icon" => "side-menu-icons/one.png", "url" => "birthdays?filter=recent", "sub_menu" => array()),
+                        array("name" => "Action Groups", "permission" => "actionGroup.getList", "download" => false, "icon" => "side-menu-icons/one.png", "url" => "action-groups", "sub_menu" => array()),
+                        array("name" => "Diary Entries", "permission" => "diaryEntry.getList", "download" => false, "icon" => "side-menu-icons/one.png", "url" => "diary-entries", "sub_menu" => array()),
+                        array("name" => "Age Ranges", "permission" => "ageRange.getList", "download" => false, "icon" => "side-menu-icons/one.png", "url" => "age-ranges", "sub_menu" => array()),
+                        array("name" => "Marks Ranges", "permission" => "marksRange.getList", "download" => false, "icon" => "side-menu-icons/one.png", "url" => "marks-ranges", "sub_menu" => array()),
+                        array("name" => "ID Card Deliveries", "permission" => "idCardDelivery.getList", "download" => false, "icon" => "side-menu-icons/one.png", "url" => "id-card-deliveries", "sub_menu" => array())
+                    )),
+                "STAFF MANAGEMENT" => array("icon" => "side-menu-icons/staff_management.png",
+                    "sub_menu" => array(
+                        array("name" => "All Staff", "permission" => "user.getList", "download" => false, "icon" => "side-menu-icons/one.png", "url" => "users?status=ACTIVE", "sub_menu" => array()),
+                        array("name" => "Add Staff", "permission" => "user.getList", "is_quick_link" => true, "download" => false, "icon" => "side-menu-icons/one.png", "url" => "add-edit-staff", "sub_menu" => array()),
+                        array("name" => "Departments", "permission" => "department.getList", "is_quick_link" => true, "download" => false, "icon" => "side-menu-icons/one.png", "url" => "school/departments", "sub_menu" => array()),
+                        array("name" => "School Roles", "permission" => "schoolRole.getList", "is_quick_link" => true, "download" => false, "icon" => "side-menu-icons/one.png", "url" => "school-roles", "sub_menu" => array()),
+                        array("name" => "School Designations", "permission" => "schoolDesignation.getList", "is_quick_link" => true, "download" => false, "icon" => "side-menu-icons/one.png", "url" => "school/designations", "sub_menu" => array()),
+                        array("name" => "Titles", "permission" => "userTitle.getList", "download" => false, "is_quick_link" => true, "icon" => "side-menu-icons/one.png", "url" => "school/titles", "sub_menu" => array()),
+                        array("name" => "Revoke School Designation Permission", "permission" => "client.grantPermissions", "download" => false, "icon" => "side-menu-icons/one.png", "url" => "school/revoke-permissions", "sub_menu" => array()),
+//                        array("name" => "Subject Teachers", "permission" => "user.getList", "download" => false, "icon" => "side-menu-icons/one.png", "url" => "subject-teachers?id=" . $clientId, "sub_menu" => array()),
+                        array("name" => "My Subjects", "permission" => "standard.getSubjects", "download" => false, "icon" => "side-menu-icons/one.png", "url" => "subjects-taught", "sub_menu" => array()),
+                        array("name" => "Subject Class Mapping", "permission" => "client.getClassSubjectMapping", "is_quick_link" => true, "download" => false, "icon" => "side-menu-icons/one.png", "url" => "subject-class-mapping", "sub_menu" => array()),
+                        array("name" => "Proof Reading", "permission" => "client.getUserProofReadingData", "download" => false, "icon" => "side-menu-icons/one.png", "url" => "client/user-proof-reading?id=" . $clientId . "&format=SOFT COPY", "sub_menu" => array()),
+                        array("name" => "Uploads", "permission" => "client.getUserProofReadingData", "download" => false, "icon" => "side-menu-icons/one.png", "url" => "user-uploads?id=" . $clientId, "sub_menu" => array()),
+                        array("name" => "House Visits", "permission" => "houseVisit.getList", "download" => false, "icon" => "side-menu-icons/one.png", "url" => "house-visits", "sub_menu" => array())
+                    )),
+                "REPORT CARD" => array(
+                    "icon" => "side-menu-icons/report_card.png",
+                    "sub_menu" => array(
+                        array("name" => "Uploads", "permission" => "client.getSetupData", "download" => false, "icon" => "side-menu-icons/one.png", "url" => "client/upload-report-card?id=" . $clientId, "sub_menu" => array()),
+                        array("name" => "Subjects", "permission" => "client.getClasses", "download" => false, "is_quick_link" => true, "icon" => "side-menu-icons/one.png", "url" => "client/subjects", "sub_menu" => array()),
+                        array("name" => "Grades", "permission" => "client.getGrades", "download" => false, "is_quick_link" => true, "icon" => "side-menu-icons/one.png", "url" => "/grades", "sub_menu" => array()),
+                        array("name" => "Exams", "permission" => "exam.getDetails", "download" => false, "is_quick_link" => true, "icon" => "side-menu-icons/one.png", "url" => "exams", "sub_menu" => array()),
+                        array("name" => "Enter Marks", "permission" => "classRoom.getResult", "is_quick_link" => true, "download" => false, "icon" => "side-menu-icons/one.png", "url" => "enter-marks", "sub_menu" => array()),
+                        array("name" => "Student Marks Entry", "permission" => "student.getResult", "is_quick_link" => true, "download" => false, "icon" => "side-menu-icons/one.png", "url" => "student-marks-entry", "sub_menu" => array()),
+                        array("name" => "Enter Additional Parameters", "permission" => "classRoom.getAdditionalParamResult", "download" => false, "icon" => "side-menu-icons/one.png", "url" => "enter-additional-parameters", "conditions" => array(), "sub_menu" => array()),
+                        array("name" => "Report Card Formats", "permission" => "client.getReportCardFormats", "is_quick_link" => true, "download" => false, "icon" => "side-menu-icons/one.png", "url" => "client/report-card-formats", "sub_menu" => array()),
+                        array("name" => "Remarks Templates", "permission" => "remarkTemplate.getList", "download" => false, "icon" => "side-menu-icons/one.png", "url" => "client/remarks-templates", "sub_menu" => array()),
+                        array("name" => "Automate Remarks", "permission" => "remark.getList", "download" => false, "icon" => "side-menu-icons/one.png", "url" => "client/auto-remarks", "sub_menu" => array()),
+                        // array("name" => "Upload Question and Answer", "permission" => "questionAnswer.getList", "download" => false, "icon" => "side-menu-icons/one.png", "url" => "question-answer", "sub_menu" => array()),
+                        array("name" => "Report Card & Analytical Sheets", "permission" => "standard.getReportCardsAndAnalyticalSheets", "is_quick_link" => true, "download" => false, "icon" => "side-menu-icons/one.png", "url" => "client/report-cards-and-analytical-sheets?id=" . $clientId, "sub_menu" => array()),
+                        array("name" => "Marks Entry Report", "permission" => "user.getMarksEntryReport", "download" => false, "icon" => "side-menu-icons/one.png", "url" => "", "conditions" => array($clientId == 566), "sub_menu" => array(
+                                array("name" => "My Report", "permission" => "user.getMarksEntryReport", "download" => false, "icon" => "side-menu-icons/one.png", "url" => "my-marks-entry-report", "conditions" => array($clientId == 566), "sub_menu" => array()),
+                                array("name" => "Class Wise", "permission" => "ClassRoom.getMarksEntryReport", "download" => false, "icon" => "side-menu-icons/one.png", "url" => "class-marks-entry-report", "conditions" => array($clientId == 566), "sub_menu" => array()),
+                                array("name" => "Exam Wise", "permission" => "exam.getMarksEntryReport", "download" => false, "icon" => "side-menu-icons/one.png", "url" => "exam-marks-entry-report", "conditions" => array($clientId == 566), "sub_menu" => array()),
+                                array("name" => "Staff Wise", "permission" => "user.getMarksEntryReport", "download" => false, "icon" => "side-menu-icons/one.png", "url" => "staff-marks-entry-report", "conditions" => array($clientId == 566), "sub_menu" => array())
+                            )),
+                        array("name" => "A4 Marksheet", "permission" => "client.getProofReadingData", "download" => false, "icon" => "side-menu-icons/one.png", "url" => "client/download-marksheet?id=" . $clientId . "&format=HARD COPY", "sub_menu" => array()),
+                        array("name" => "Upload Signatures", "permission" => "client.uploadSignature", "download" => false, "icon" => "side-menu-icons/one.png", "url" => "client/upload-signatures?id=" . $clientId, "sub_menu" => array()),
+                        array("name" => "Headers & Folders", "permission" => "client.uploadFolderFront", "download" => false, "icon" => "side-menu-icons/one.png", "url" => "client/upload-header-and-folder", "sub_menu" => array()),
+                        array("name" => "Analytical Sheets Charges", "permission" => "client.getAnalyticalSheetCharges", "download" => false, "icon" => "side-menu-icons/one.png", "url" => "client/set-analysis-price?id=" . $clientId, "sub_menu" => array()),
+                        array("name" => "View Published Report Cards", "permission" => "reportCard.getAllReportCardsHistory", "download" => false, "icon" => "side-menu-icons/one.png", "url" => "published-report-cards", "sub_menu" => array()),
+                        array("name" => "Optional Subject Student Mapping", "permission" => "classRoom.getStudentsWithOptionalSubjects", "download" => false, "icon" => "side-menu-icons/one.png", "url" => "optional-subject-students", "sub_menu" => array()),
+                        array("name" => "Report Card Product Downloads", "permission" => "reportCardProduct.getDownloads", "download" => false, "icon" => "side-menu-icons/one.png", "url" => "report-card-product-downloads", "sub_menu" => array()),
+                        array("name" => "Block Report Card", "is_quick_link" => true, "permission" => "classRoom.changeReportCardStatusByExam", "download" => false, "icon" => "side-menu-icons/one.png", "url" => "block-report-card", "sub_menu" => array()),
+                        array("name" => "Exam Schedule", "is_quick_link" => false, "permission" => "exam.getSchedule", "download" => false, "icon" => "side-menu-icons/one.png", "url" => "exam/schedule", "sub_menu" => array()),
+                        array("name" => "Result Analysis Formats", "is_quick_link" => false, "permission" => "resultAnalysisFormat.getList", "download" => false, "icon" => "side-menu-icons/one.png", "url" => "result-analysis-formats", "sub_menu" => array()),
+                        array("name" => "CoCurricular Activities", "is_quick_link" => false, "permission" => "coCurricularActivity.getList", "download" => false, "icon" => "side-menu-icons/one.png", "url" => "co-curricular-activities", "sub_menu" => array()),
+                    )),
+                "ONLINE EXAM" => array("icon" => "side-menu-icons/online_exam.png", "sub_menu" => array(
+                        array("name" => "View Quizzes", "permission" => "quiz.getList", "is_quick_link" => true, "download" => false, "icon" => "side-menu-icons/one.png", "url" => "quizzes", "sub_menu" => array()),
+//                        array("name" => "View Questions", "permission" => "question.getList", "download" => false, "icon" => "side-menu-icons/one.png", "url" => "quiz-questions", "sub_menu" => array()),
+//                        array("name" => "Review Answers", "permission" => "quiz.reviewQuizResponse", "download" => false, "icon" => "side-menu-icons/one.png", "url" => "quiz-response-review", "sub_menu" => array())
+                    )),
+                "MOBITENDANCE" => array("icon" => "side-menu-icons/mobiTENDANCE.png", "sub_menu" => array(
+                        array("name" => "Take Attendance", "permission" => "client.sendAttendanceSMS", "download" => false, "icon" => "side-menu-icons/one.png", "url" => "take-attendance", "is_quick_link" => true, "sub_menu" => array()),
+                        array("name" => "Daily Attendance Report", "is_quick_link" => true, "permission" => "client.getAttendanceSummaryDatewise", "download" => false, "icon" => "side-menu-icons/one.png", "url" => "client/attendance-report-summary?date=" . date("Y-m-d"), "sub_menu" => array()),
+                        //  array("name" => "Class Attendance Stats", "permission" => "classAttendance.getAttendanceStats", "download" => false, "icon" => "side-menu-icons/one.png", "url" => "class-attendance-stats?start_date=" . date("Y-m-d", strtotime("-1 month", strtotime(date("Y-m-d")))) . "&end_date=" . date("Y-m-d"), "sub_menu" => array()),
+                        array("name" => "Download Attendance Report", "permission" => "client.getAttendance", "download" => false, "icon" => "side-menu-icons/one.png", "url" => "client/download-attendance-report-summary?id=" . $clientId . "&start_date=" . date("Y-m-d") . "&end_date=" . date("Y-m-d"), "sub_menu" => array()),
+                        array("name" => "Overall Attendance Report", "permission" => "client.getSMSStatistics", "download" => false, "icon" => "side-menu-icons/one.png", "url" => "client-sms-summary?start_date=" . date("Y-m-d", strtotime('-1 week')) . "&end_date=" . date("Y-m-d"), "sub_menu" => array()),
+                        array("name" => "Send Monthly Attendance Report", "permission" => "client.sendMonthlyAttendanceReport", "download" => false, "icon" => "side-menu-icons/one.png", "url" => "client/attendance-report-list", "sub_menu" => array()),
+                        array("name" => "Missed Attendance", "permission" => "classRoom.takeAttendanceForMultipleDates", "download" => false, "icon" => "side-menu-icons/one.png", "url" => "client/take-attendance-for-multiple-dates?start_date=" . date("Y-m-d", strtotime(date("Y-m-d") . " -1 month")) . "&end_date=" . date("Y-m-d", strtotime(date("Y-m-d") . " -1 day")), "sub_menu" => array()),
+                        array("name" => "Attendance Date Report", "permission" => "client.getClassWiseAttendanceDateReport", "download" => false, "icon" => "side-menu-icons/one.png", "url" => "client/attendance-date-report?start_date=" . date("Y-m-d", strtotime(date("Y-m-d") . " -1 month")) . "&end_date=" . date("Y-m-d", strtotime(date("Y-m-d") . " -1 day")), "sub_menu" => array()),
+                        //   array("name" => "Back Date Attendance Report", "permission" => "classAttendance.getBackDateAttendanceSummary", "download" => false, "icon" => "side-menu-icons/one.png", "url" => "back-date-attendance?start_date=" . date("Y-m-d", strtotime("-1 month", strtotime(date("Y-m-d")))) . "&end_date=" . date("Y-m-d"), "sub_menu" => array()),
+                        //   array("name" => "Send Daily Attendance Notification", "permission" => "client.sendDailyAttendanceNotification", "download" => false, "icon" => "side-menu-icons/one.png", "url" => "client/send-daily-attendance-notification?id=" . $clientId, "sub_menu" => array()),
+                        array("name" => "MobiAnalysis", "permission" => "client.getMobiAnalysis", "download" => false, "icon" => "side-menu-icons/one.png", "url" => "client/mobi-analysis?id=" . $clientId . "&start_date=" . date("Y-m-d") . "&end_date=" . date("Y-m-d"), "sub_menu" => array()),
+                        array("name" => "Student Leave Applications", "permission" => "studentLeave.getList", "download" => false, "icon" => "side-menu-icons/one.png", "url" => "student-leaves", "sub_menu" => array()),
+                        array("name" => "Monthly Average", "permission" => "client.getAverageAttendanceByMonth", "download" => false, "icon" => "side-menu-icons/one.png", "url" => "monthly-average-attendance?month=" . date('F', strtotime('first day of last month')), "sub_menu" => array()),
+                    //    array("name" => "Holiday List", "permission" => "client.getHolidays", "download" => false, "icon" => "side-menu-icons/one.png", "url" => "client/holidays?id=" . $clientId, "sub_menu" => array()),
+                    //    array("name" => "Holiday Report", "permission" => "client.getHolidays", "download" => false, "icon" => "side-menu-icons/one.png", "url" => "client/holiday-report?id=" . $clientId . "&start_date=" . date("Y-m-d", strtotime(date("Y-m-d") . "- 1 month")) . "&end_date=" . date("Y-m-d"), "sub_menu" => array()),
+                    //    array("name" => "Staff SMS List", "permission" => "classSMS.getList", "download" => false, "icon" => "side-menu-icons/one.png", "url" => "client-sms", "sub_menu" => array()),
+                    //    array("name" => "Student SMS List", "is_quick_link" => true, "permission" => "studentSMS.getList", "download" => false, "icon" => "side-menu-icons/one.png", "url" => "student-sms", "sub_menu" => array()),
+                    //    array("name" => "Set Notification Timings", "permission" => "client.getSetupData", "download" => false, "icon" => "side-menu-icons/one.png", "url" => "client/timings?product_code=MOBI&id=" . $clientId, "sub_menu" => array())
+                    )),
+                "SMS CIRCULAR" => array("icon" => "side-menu-icons/sms_circular.png", "sub_menu" => array(
+                        array("name" => "View Notices", "is_quick_link" => true, "permission" => "notice.getList", "download" => false, "icon" => "side-menu-icons/one.png", "url" => "notices", "sub_menu" => array()),
+                        array("name" => "Send SMS Circular", "permission" => "notice.add", "download" => false, "icon" => "side-menu-icons/one.png", "url" => "client/send-notice", "is_quick_link" => true, "sub_menu" => array()),
+                        array("name" => "Send Custom SMS", "permission" => "client.sendCustomSMS", "download" => false, "icon" => "side-menu-icons/one.png", "url" => "client/custom-sms", "conditions" => array(), "sub_menu" => array()),
+                        array("name" => "Custom SMS", "permission" => "customSms.getList", "download" => false, "icon" => "side-menu-icons/one.png", "url" => "client/custom-smss", "conditions" => array(\jntreport\Auth\Auth::isInternal(),
+                        array("name" => "Notice Types", "is_quick_link" => false, "permission" => "noticeType.getList", "download" => false, "icon" => "side-menu-icons/one.png", "url" => "notice-types", "sub_menu" => array()),), "sub_menu" => array())
+                    )),
+                "HOMEWORK MESSAGE" => array("icon" => "side-menu-icons/homework_message.png", "sub_menu" => array(
+                        array("name" => "View Homework", "is_quick_link" => true, "permission" => "homeworkReminder.getList", "download" => false, "icon" => "side-menu-icons/one.png", "url" => "homework-reminders", "sub_menu" => array()),
+                        array("name" => "Send Homework Message", "permission" => "homeworkReminder.add", "download" => false, "icon" => "side-menu-icons/one.png", "url" => "client/send-homework", "is_quick_link" => true, "sub_menu" => array())
+                    )),
+//                "SMS WALLET" => array("icon" => "side-menu-icons/sms_wallet.png", "sub_menu" => array(
+//                        array("name" => "View History", "permission" => "smsWallet.getList", "download" => false, "icon" => "side-menu-icons/one.png", "url" => "sms-wallets", "sub_menu" => array())
+//                    )),
+                "CLOUD STORAGE" => array("icon" => "side-menu-icons/cloud_storage.png", "sub_menu" => array(
+                        array("name" => "View Cloud Attachments", "is_quick_link" => true, "permission" => "cloudAttachment.getList", "download" => false, "icon" => "side-menu-icons/one.png", "url" => "cloud-attachments", "sub_menu" => array())
+                    )),
+                "SMS WALLET" => array("icon" => "side-menu-icons/sms_circular.png", "sub_menu" => array(
+                        array("name" => "View History", "permission" => "smsWallet.getList", "download" => false, "icon" => "side-menu-icons/one.png", "url" => "sms-wallets", "sub_menu" => array()),
+//                        array("name" => "Staff SMS List", "is_quick_link" => true, "permission" => "classSMS.getList", "download" => false, "icon" => "side-menu-icons/one.png", "url" => "client-sms", "sub_menu" => array()),
+//                        array("name" => "Student SMS List", "is_quick_link" => true, "permission" => "studentSMS.getList", "download" => false, "icon" => "side-menu-icons/one.png", "url" => "student-sms", "sub_menu" => array()),
+                    )),
+                "ONLINE FEE" => array(
+                    "icon" => "side-menu-icons/online_fee.png",
+                    "sub_menu" => array(
+//                        array("name" => "Setup", "permission" => "clientBankAccount.getList", "download" => false, "icon" => "side-menu-icons/one.png", "url" => "client-bank-accounts", "is_quick_link" => false, "sub_menu" => array()),
+                        array("name" => "Online Transactions", "permission" => "onlineTransaction.getList", "download" => false, "icon" => "side-menu-icons/one.png", "url" => "online-transactions", "is_quick_link" => false, "conditions" => array(\jntreport\Auth\Auth::isInternal()), "sub_menu" => array()),
+                        array("name" => "View Fees", "permission" => "fee.getList", "download" => false, "icon" => "side-menu-icons/one.png", "url" => "fees", "is_quick_link" => true, "sub_menu" => array()),
+                        array("name" => "Mark Student Fees", "permission" => "fee.uploadStudentFee", "download" => false, "icon" => "side-menu-icons/one.png", "url" => "mark-student-fees", "is_quick_link" => true, "sub_menu" => array()),
+                        array("name" => "Fee Summary", "is_quick_link" => true, "permission" => "client.getDateWiseFeeCollections", "download" => false, "icon" => "side-menu-icons/one.png", "url" => "client/datewise-fee-collection", "sub_menu" => array()),
+                        array("name" => "Datewise Fee Collection", "permission" => "client.getDateWiseFeeCollections", "download" => false, "icon" => "side-menu-icons/one.png", "url" => "fees/date-wise", "sub_menu" => array()),
+                        array("name" => "Sessionwise Fee Collection", "permission" => "school.getSessionWiseFeeCollections", "download" => false, "icon" => "side-menu-icons/one.png", "url" => "fees/session-wise", "sub_menu" => array()),
+                        array("name" => "Standardwise Fee Collection Summary", "permission" => "client.getFeeCollectionSummary", "download" => false, "icon" => "side-menu-icons/one.png", "url" => "fees/summary", "sub_menu" => array()),
+                        array("name" => "Periodwise Fee Collection Summary", "permission" => "client.getFeeNameWiseSummary", "download" => false, "icon" => "side-menu-icons/one.png", "url" => "fee-name-summary", "sub_menu" => array()),
+                        array("name" => "Payouts", "permission" => "payout.getList", "download" => false, "icon" => "side-menu-icons/one.png", "url" => "payouts", "sub_menu" => array()),
+                        array("name" => "Concession / Optional Fees", "permission" => "classRoom.setFeeTypeStudents", "download" => false, "icon" => "side-menu-icons/one.png", "url" => "fee-type/students", "sub_menu" => array()),
+                        array("name" => "Variable Fees Students", "permission" => "classRoom.addVariableFeeTypeStudent", "download" => false, "icon" => "side-menu-icons/one.png", "url" => "variable-fee-type/students?is_variable=1", "sub_menu" => array()),
+                        array("name" => "Late Fees", "permission" => "client.getLateFeeAmounts", "download" => false, "icon" => "side-menu-icons/one.png", "url" => "late-fees", "sub_menu" => array()),
+                        array("name" => "Waive Off Late Fee", "permission" => "client.getWaivedOffLateFees", "download" => false, "icon" => "side-menu-icons/one.png", "url" => "waive-off-late-fee", "sub_menu" => array()),
+                        array("name" => "Waive Off Transport Fee", "permission" => "waiveOffTransportFee.getList", "download" => false, "icon" => "side-menu-icons/one.png", "url" => "waive-off-transport-fee", "sub_menu" => array()),
+                        array("name" => "Fee Defaulters", "permission" => "client.getFeeDefaulters", "download" => false, "icon" => "side-menu-icons/one.png", "url" => "client/fee-defaulters", "sub_menu" => array()),
+                        array("name" => "Fee Defaulter Letters", "permission" => "feeDefaulterLetter.getList", "download" => false, "icon" => "side-menu-icons/one.png", "url" => "fee-defaulter-download", "sub_menu" => array()),
+                        array("name" => "View School Buses", "permission" => "schoolBus.getList", "download" => false, "icon" => "side-menu-icons/one.png", "url" => "school-buses", "sub_menu" => array()),
+                        array("name" => "Transport Locations", "permission" => "location.getList", "download" => false, "icon" => "side-menu-icons/one.png", "url" => "locations", "sub_menu" => array()),
+                        array("name" => "Fee Types", "permission" => "client.getFeeTypes", "download" => false, "icon" => "side-menu-icons/one.png", "url" => "client/fee-types", "sub_menu" => array()),
+                        array("name" => "Fee Type Students", "permission" => "feeType.getStudents", "download" => false, "icon" => "side-menu-icons/one.png", "url" => "fee-type-students", "sub_menu" => array()),
+                        array("name" => "Fee Category Concession", "permission" => "client.getFeeCategoryConcessions", "download" => false, "icon" => "side-menu-icons/one.png", "url" => "fee-category-concessions", "sub_menu" => array()),
+                        array("name" => "Student Ledger", "permission" => "client.getStudentLedger", "download" => false, "icon" => "side-menu-icons/one.png", "url" => "", "sub_menu" => array(
+                                array("name" => "Soft Copy (.xlsx)", "permission" => "client.getStudentLedger", "download" => false, "icon" => "side-menu-icons/one.png", "url" => "set-background-action?type=StudentLedger", "sub_menu" => array())
+                            )),
+                        array("name" => "Fee Structure", "permission" => "client.getFeeSummary", "download" => false, "icon" => "side-menu-icons/one.png", "url" => "client/fee-structure", "conditions" => array(\jntreport\Auth\Auth::isInternal()), "sub_menu" => array()),
+                        array("name" => "Fee Head Collection Summary", "permission" => "client.getFeeTypeCollectionSummary", "download" => false, "icon" => "side-menu-icons/one.png", "url" => "download-fee-type-collection", "conditions" => array(\jntreport\Auth\Auth::isInternal()), "sub_menu" => array())
+                    )
+                ),
+                "TRANSPORT MANAGEMENT" => array("icon" => "side-menu-icons/gps.png", "sub_menu" => array(
+                        array("name" => "View School Buses", "permission" => "schoolBus.getList", "download" => false, "icon" => "side-menu-icons/one.png", "url" => "school-buses", "sub_menu" => array()),
+                        array("name" => "Transport Locations", "permission" => "location.getList", "download" => false, "icon" => "side-menu-icons/one.png", "url" => "locations", "sub_menu" => array()),
+                        array("name" => "Take Attendance", "permission" => "schoolBus.getSchoolBusControl", "download" => false, "icon" => "side-menu-icons/one.png", "url" => "school-bus-controls?date=" . date('Y-m-d'), "sub_menu" => array(), "conditions" => array(\jntreport\Auth\Auth::isInternal())),
+                        array("name" => "School Bus Attendance", "permission" => "schoolBus.getSchoolBusAttendance", "download" => false, "icon" => "side-menu-icons/one.png", "url" => "school-buses/attendance?start_date=" . date("Y-m-d") . "&end_date=" . date("Y-m-d"), "sub_menu" => array()),
+                        array("name" => "Track School Bus", "permission" => "schoolBus.getCurrentLocation", "download" => false, "icon" => "side-menu-icons/one.png", "url" => "school-bus-location", "sub_menu" => array()),
+                        array("name" => "Transport Documents", "permission" => "transportDocument.getList", "download" => false, "icon" => "side-menu-icons/one.png", "url" => "transport-documents", "sub_menu" => array())
+                    )),
+                "ID CARD" => array("icon" => "side-menu-icons/id_card.png", "sub_menu" => array(
+                        array("name" => "Download ID Card", "permission" => "iDCard.getList", "download" => false, "icon" => "side-menu-icons/one.png", "url" => "client/id-card?id=" . $clientId, "sub_menu" => array()),
+                        array("name" => "Upload ID Card", "permission" => "client.uploadIDCard", "download" => false, "icon" => "side-menu-icons/one.png", "url" => "client/upload-id-card?id=" . $clientId, "sub_menu" => array()),
+                        array("name" => "ID Cards", "permission" => "iDCard.getList", "download" => false, "icon" => "side-menu-icons/one.png", "url" => "id-cards", "sub_menu" => array()),
+                        array("name" => "Staff ID Card", "permission" => "userIdCard.getList", "download" => false, "icon" => "side-menu-icons/one.png", "url" => "staff-id-cards", "sub_menu" => array())
+                    )),
+                "MOBILE PHONES" => array("icon" => "side-menu-icons/mobile_phone.png", "sub_menu" => array(
+                        array("name" => "Download Mobiles (.xls)", "permission" => "mobile.getList", "download" => false, "icon" => "side-menu-icons/one.png", "url" => "mobiles/download-excel", "sub_menu" => array())
+                    )),
+                "TIME TABLE" => array("icon" => "side-menu-icons/time_table.png", "sub_menu" => array(
+                        array("name" => "Timetable Setup", "permission" => "client.getStandardTimePeriod", "download" => false, "icon" => "side-menu-icons/one.png", "url" => "timetable-setup", "sub_menu" => array()),
+                        array("name" => "Activity Room", "permission" => "activityRoom.getList", "download" => false, "icon" => "side-menu-icons/one.png", "url" => "client/activity-room", "sub_menu" => array()),
+                        array("name" => "Subjects", "permission" => "classRoom.getList", "download" => false, "icon" => "side-menu-icons/one.png", "url" => "client/subjects?timetable=true", "sub_menu" => array()),
+                        array("name" => "Available Teachers", "permission" => "client.getTeachersFreeTimePeriod", "download" => false, "icon" => "side-menu-icons/one.png", "url" => "teacher-free-periods", "sub_menu" => array()),
+                        array("name" => "View Class Timetable", "permission" => "client.getStandardTimePeriod", "download" => false, "icon" => "side-menu-icons/one.png", "url" => "class-time-table", "sub_menu" => array()),
+                        array("name" => "View Staff Timetable", "permission" => "client.getStandardTimePeriod", "download" => false, "icon" => "side-menu-icons/one.png", "url" => "teachers-weekly-timetable", "sub_menu" => array()),
+                        array("name" => "Download Staff Timetable", "permission" => "client.getStandardTimePeriod", "download" => false, "icon" => "side-menu-icons/one.png", "url" => "client/user-time-table", "sub_menu" => array()),
+                        array("name" => "Combined Classes", "permission" => "classRoom.getCombinedClassList", "download" => false, "icon" => "side-menu-icons/one.png", "url" => "combined-class-list", "sub_menu" => array()),
+                        array("name" => "User School Buildings", "permission" => "user.getSchoolBuildings", "download" => false, "icon" => "side-menu-icons/one.png", "url" => "user-school-buildings", "sub_menu" => array())
+                    )),
+                "LIBRARY MANAGEMENT" => array("icon" => "side-menu-icons/library.png", "sub_menu" => array(
+                        array("name" => "View Libraries", "permission" => "library.getList", "download" => false, "icon" => "side-menu-icons/one.png", "url" => "libraries", "sub_menu" => array()),
+                        array("name" => "View Authors", "permission" => "author.getList", "download" => false, "icon" => "side-menu-icons/one.png", "url" => "authors", "sub_menu" => array()),
+                        array("name" => "View Publishers", "permission" => "publisher.getList", "download" => false, "icon" => "side-menu-icons/one.png", "url" => "publishers", "sub_menu" => array()),
+                        array("name" => "Book Categories", "permission" => "bookCategory.getList", "download" => false, "icon" => "side-menu-icons/one.png", "url" => "book-categories", "sub_menu" => array()),
+                        array("name" => "Book Languages", "permission" => "bookLanguage.getList", "download" => false, "icon" => "side-menu-icons/one.png", "url" => "book-languages", "sub_menu" => array()),
+                        array("name" => "Book Suppliers", "permission" => "bookSupplier.getList", "download" => false, "icon" => "side-menu-icons/one.png", "url" => "book-suppliers", "sub_menu" => array()),
+                        array("name" => "View Library Rooms", "permission" => "libraryRoom.getList", "download" => false, "icon" => "side-menu-icons/one.png", "url" => "library-rooms", "sub_menu" => array()),
+                        array("name" => "View Library Shelves", "permission" => "libraryShelf.getList", "download" => false, "icon" => "side-menu-icons/one.png", "url" => "library-shelves", "sub_menu" => array()),
+                        array("name" => "View Library Racks", "permission" => "libraryRack.getList", "download" => false, "icon" => "side-menu-icons/one.png", "url" => "library-racks", "sub_menu" => array()),
+                        array("name" => "View Books", "permission" => "book.getList", "download" => false, "icon" => "side-menu-icons/one.png", "url" => "choose-library?books=1", "sub_menu" => array()),
+                        array("name" => "View Book Copies", "permission" => "bookCopy.getList", "download" => false, "icon" => "side-menu-icons/one.png", "url" => "choose-library?issue-books=1", "sub_menu" => array()),
+                        array("name" => "View Borrowers", "permission" => "borrower.getList", "download" => false, "icon" => "side-menu-icons/one.png", "url" => "choose-library?borrowers=1", "sub_menu" => array()),
+                        array("name" => "View Book Issues", "permission" => "bookIssue.getList", "download" => false, "icon" => "side-menu-icons/one.png", "url" => "choose-library?book-issues=1", "sub_menu" => array()),
+                        array("name" => "Withdrawal List", "permission" => "bookCopy.getList", "download" => false, "icon" => "side-menu-icons/one.png", "url" => "choose-library?withdrawal-list=1", "sub_menu" => array()),
+                        array("name" => "View Fine Collection", "permission" => "library.getFineCollectionList", "download" => false, "icon" => "side-menu-icons/one.png", "url" => "choose-library?library-fine-collections=1", "sub_menu" => array())
+                    )),
+                "DOCUMENTS" => array("icon" => "side-menu-icons/document_management.png", "sub_menu" => array(
+                        array("name" => "View Admission Data", "permission" => "studentAdmission.getList", "download" => false, "icon" => "side-menu-icons/one.png", "url" => "student-admissions", "sub_menu" => array()),
+                        array("name" => "Certificates", "is_quick_link" => true, "permission" => "certificate.getList", "download" => false, "icon" => "side-menu-icons/one.png", "url" => "certificates", "sub_menu" => array()),
+                        array("name" => "Documents", "is_quick_link" => true, "permission" => "document.getList", "download" => false, "icon" => "side-menu-icons/one.png", "url" => "documents", "sub_menu" => array()),
+                        array("name" => "Add/ Edit Admission Data", "permission" => "studentAdmission.add", "download" => false, "icon" => "side-menu-icons/one.png", "url" => "student/update-student-admission", "sub_menu" => array()),
+                        array("name" => "Download Documents", "is_quick_link" => true, "permission" => "student.downloadDocuments", "download" => false, "icon" => "side-menu-icons/one.png", "url" => "/client/download-certificates", "sub_menu" => array()),
+                        array("name" => "Transfer Certificates", "is_quick_link" => true, "permission" => "transferCertificate.getList", "download" => false, "icon" => "side-menu-icons/one.png", "url" => "transfer-certificates", "sub_menu" => array())
+                    )),
+                "ONLINE ADMISSION" => array("icon" => "side-menu-icons/online_admission.png", "sub_menu" => array(
+                        array("name" => "Online Admission Lists", "permission" => "onlineAdmission.getList", "download" => false, "icon" => "side-menu-icons/one.png", "url" => "online-admissions", "sub_menu" => array()),
+                        array("name" => "Start Online Admission", "permission" => "onlineAdmission.add", "download" => false, "icon" => "side-menu-icons/one.png", "url" => "online-admission-add-edit", "sub_menu" => array()),
+                        array("name" => "View Signup Students", "permission" => "onlineAdmissionStudent.getList", "download" => false, "icon" => "side-menu-icons/one.png", "url" => "online-admission-students", "sub_menu" => array()),
+                        array("name" => "View Applications", "permission" => "appliedStudent.getList", "download" => false, "icon" => "side-menu-icons/one.png", "url" => "applications", "sub_menu" => array()),
+                        array("name" => "View Client Specific Application Fields", "permission" => "applicationField.getList", "download" => false, "icon" => "side-menu-icons/one.png", "url" => "client-online-admissions", "sub_menu" => array()),
+                        array("name" => "Offline Admission Register", "permission" => "admissionRegister.getList", "download" => false, "icon" => "side-menu-icons/one.png", "url" => "admission-registers", "sub_menu" => array())
+                    )),
+                //    "GP" => array("icon" => "side-menu-icons/support-center.png", "sub_menu" => array(
+                //            array("name" => "Gate Passes", "permission" => "gatePass.getList", "download" => false, "icon" => "side-menu-icons/one.png", "url" => "gate-passes", "sub_menu" => array())
+                //        )),
+                "GALLERY" => array("icon" => "side-menu-icons/gallery.png", "sub_menu" => array(
+                        array("name" => "Album", "is_quick_link" => true, "permission" => "album.getList", "download" => false, "icon" => "side-menu-icons/one.png", "url" => "album", "sub_menu" => array()),
+                        array("name" => "Photo", "is_quick_link" => true, "permission" => "photo.getlist", "download" => false, "icon" => "side-menu-icons/one.png", "url" => "photo", "sub_menu" => array())
+                    )),
+                "SUPPORT CENTER" => array("icon" => "side-menu-icons/support-center.png", "sub_menu" => array(
+                        array("name" => "Tickets", "permission" => "client.getTicketsAssignedByUsers", "is_quick_link" => true, "download" => false, "icon" => "side-menu-icons/one.png", "url" => "client/tickets", "sub_menu" => array()),
+                        //      array("name" => "Mobile SIM Replacements", "permission" => "mobileSimReplacement.getList", "download" => false, "icon" => "side-menu-icons/one.png", "url" => "mobile-sim-replacements?client_id=" . $clientId, "sub_menu" => array()),
+                        array("name" => "Help And Support", "permission" => "knowledgeBaseCategory.getList", "is_quick_link" => true, "download" => false, "icon" => "side-menu-icons/one.png", "url" => "help-and-support", "sub_menu" => array()),
+                        array("name" => "Background Downloads", "permission" => "backgroundAction.getList", "is_quick_link" => FALSE, "download" => false, "icon" => "side-menu-icons/one.png", "url" => "background-downloads", "sub_menu" => array()),
+                        array("name" => "Trainings", "permission" => "training.getList", "is_quick_link" => true, "download" => false, "icon" => "side-menu-icons/one.png", "url" => "trainings", "sub_menu" => array())
+                    )),
+//                "LESSON PLANNING" => array("icon" => "side-menu-icons/support-center.png", "sub_menu" => array(
+//                        array("name" => "Lessons", "permission" => "lessonPlanning.getList", "download" => false, "icon" => "side-menu-icons/one.png", "url" => "lesson-planning", "sub_menu" => array()),
+//                        array("name" => "Topics", "permission" => "topic.getList", "download" => false, "icon" => "side-menu-icons/one.png", "url" => "topics", "sub_menu" => array()),
+//                        array("name" => "Lectures", "permission" => "userLecture.getList", "download" => false, "icon" => "side-menu-icons/one.png", "url" => "user-lecture", "sub_menu" => array())
+//                    )),
+                "HR MANAGEMENT" => array("icon" => "side-menu-icons/support-center.png", "sub_menu" => array(
+                        array("name" => "Leave Sessions", "permission" => "leaveSession.getList", "download" => false, "icon" => "side-menu-icons/one.png", "url" => "school-leave-sessions", "sub_menu" => array()),
+                        array("name" => "Statutory Compliance Management", "permission" => "client.getStatutoryManagementData", "download" => false, "icon" => "side-menu-icons/one.png", "url" => "client/statutory-compliance-management", "sub_menu" => array()),
+                        array("name" => "Assign Staff Pay Segments", "permission" => "client.assignUserPaySegment", "download" => false, "icon" => "side-menu-icons/one.png", "url" => "assign-staff-pay-segments", "sub_menu" => array()),
+                        array("name" => "Earning Type", "permission" => "salaryEarningType.getList", "download" => false, "icon" => "side-menu-icons/one.png", "url" => "salary-earning-types", "sub_menu" => array()),
+                        array("name" => "Payslip Earning Type", "permission" => "salaryStructure.getList", "download" => false, "icon" => "side-menu-icons/one.png", "url" => "client/earning-types", "sub_menu" => array()),
+                        array("name" => "Leave Types", "permission" => "leaveType.getList", "download" => false, "icon" => "side-menu-icons/one.png", "url" => "school-leave-types", "sub_menu" => array()),
+                        array("name" => "School Shifts", "permission" => "schoolShift.getList", "download" => false, "icon" => "side-menu-icons/one.png", "url" => "school-shifts", "sub_menu" => array()),
+                        array("name" => "Late Rules", "permission" => "lateRule.getList", "download" => false, "icon" => "side-menu-icons/one.png", "url" => "school-shift-late-rules", "sub_menu" => array()),
+                        array("name" => "Assign Reporting Person", "permission" => "user.assignReportingHeadToUsers", "download" => false, "icon" => "side-menu-icons/one.png", "url" => "client/assign-reporting-head", "sub_menu" => array()),
+                        array("name" => "Salary Deductions", "permission" => "salaryDeduction.getList", "download" => false, "icon" => "side-menu-icons/one.png", "url" => "client/salary-deductions", "sub_menu" => array()),
+                        array("name" => "Check Staff Leave Allocations", "permission" => "leaveType.getClientUserMapping", "download" => false, "icon" => "side-menu-icons/one.png", "url" => "school-staff-leave-types", "sub_menu" => array()),
+                        array("name" => "Salary Reimbursement", "permission" => "salaryReimbursement.getList", "download" => false, "icon" => "side-menu-icons/one.png", "url" => "client/salary-reimbursement", "sub_menu" => array()),
+                        array("name" => "Staff Salary Listing", "permission" => "client.getStaffSalaryData", "download" => false, "icon" => "side-menu-icons/one.png", "url" => "client/staff-salary", "sub_menu" => array()),
+                        array("name" => "Payroll Report", "permission" => "payroll.getReport", "download" => false, "icon" => "side-menu-icons/one.png", "url" => "client-payroll-report", "sub_menu" => array()),
+                        array("name" => "Payroll", "permission" => "payroll.getList", "download" => false, "icon" => "side-menu-icons/one.png", "url" => "staff/payroll-listing", "sub_menu" => array()),
+//                        array("name" => "Staff Payroll Structure", "permission" => "payroll.add", "download" => false, "icon" => "side-menu-icons/one.png", "url" => "client/staff-payroll-structure", "sub_menu" => array()),
+                        array("name" => "Check Staff Attendance", "permission" => "staffAttendance.getList", "download" => false, "icon" => "side-menu-icons/one.png", "url" => "client/staff-attendance-data?" . "start_date=" . date("Y-m-d") . "&end_date=" . date("Y-m-d"), "sub_menu" => array()),
+                        array("name" => "Leave Applications", "permission" => "userLeaveApplication.getList", "download" => false, "icon" => "side-menu-icons/one.png", "url" => "school-staff-leave-applications", "sub_menu" => array())
+                    )),
+                "INVENTORY MANAGEMENT" => array("icon" => "side-menu-icons/one.png", "sub_menu" => array(
+                        array("name" => " Vendors", "permission" => "vendor.getList", "download" => false, "icon" => "side-menu-icons/one.png", "url" => "vendors?client_id=" . $clientId, "sub_menu" => array()),
+                        array("name" => " Items", "permission" => "item.getList", "download" => false, "icon" => "side-menu-icons/one.png", "url" => "item?client_id=" . $clientId, "sub_menu" => array()),
+                        array("name" => " Purchase Orders", "permission" => "purchaseOrder.getList", "download" => false, "icon" => "side-menu-icons/one.png", "url" => "purchase-order?client_id=" . $clientId, "sub_menu" => array())
+                    )),
+                "HOSTEL MANAGEMENT" => array("icon" => "side-menu-icons/support-center.png", "sub_menu" => array(
+                        array("name" => "Hostels", "permission" => "hostel.getList", "download" => false, "icon" => "side-menu-icons/one.png", "url" => "hostels", "sub_menu" => array()),
+                        array("name" => "Hostel Wings", "permission" => "hostelWing.getList", "download" => false, "icon" => "side-menu-icons/one.png", "url" => "hostel-wings", "sub_menu" => array()),
+                        array("name" => "Hostel Floors", "permission" => "hostelFloor.getList", "download" => false, "icon" => "side-menu-icons/one.png", "url" => "hostel-floors", "sub_menu" => array()),
+                        array("name" => "Hostel Rooms", "permission" => "hostelRoom.getList", "download" => false, "icon" => "side-menu-icons/one.png", "url" => "hostel-rooms", "sub_menu" => array()),
+                        array("name" => "Hostel Beds", "permission" => "hostelBed.getList", "download" => false, "icon" => "side-menu-icons/one.png", "url" => "hostel-beds", "sub_menu" => array()),
+                    )),
+                "VISITOR MANAGEMENT" => array("icon" => "side-menu-icons/support-center.png", "sub_menu" => array(
+                        array("name" => "Visitors", "permission" => "visitor.getList", "download" => false, "icon" => "side-menu-icons/one.png", "url" => "visitors", "sub_menu" => array()),
+                        array("name" => "Visitor Type", "permission" => "visitorType.getList", "download" => false, "icon" => "side-menu-icons/one.png", "url" => "visitor-types", "sub_menu" => array()),
+                        array("name" => "School Gate", "permission" => "schoolGate.getList", "download" => false, "icon" => "side-menu-icons/one.png", "url" => "school-gates", "sub_menu" => array()),
+                    )),
+                "LIVE EVENTS" => array("icon" => "side-menu-icons/sidebar-online-quiz.png", "sub_menu" => array(
+                        array("name" => "Events", "permission" => "liveEvent.getList", "download" => false, "icon" => "side-menu-icons/one.png", "url" => "client/live-events", "sub_menu" => array())
+                    )),
+                "LOST AND FOUND" => array("icon" => "side-menu-icons/support-center.png", "sub_menu" => array(
+                        array("name" => " Lost Founds", "permission" => "lostFound.getList", "download" => false, "icon" => "side-menu-icons/one.png", "url" => "lost-found", "sub_menu" => array())
+                    )),
+                "School Calendar" => array("icon" => "side-menu-icons/support-center.png", "sub_menu" => array(
+                        array("name" => "Event Types", "permission" => "eventType.getList", "download" => false, "icon" => "side-menu-icons/one.png", "url" => "event-types", "sub_menu" => array()),
+                        array("name" => "Events", "permission" => "event.getList", "download" => false, "icon" => "side-menu-icons/one.png", "url" => "events", "sub_menu" => array())
+                    )),
+                "Online Classes" => array("icon" => "side-menu-icons/gps.png", "sub_menu" => array(
+//                        array("name" => "Meeting Modes", "permission" => "meetingMode.getList", "download" => false, "icon" => "side-menu-icons/one.png", "url" => "meeting-modes", "sub_menu" => array()),
+                        array("name" => "Meetings", "is_quick_link" => true, "permission" => "meeting.getList", "download" => false, "icon" => "side-menu-icons/one.png", "url" => "meetings", "sub_menu" => array())
+                    )),
+                "Teacher Review" => array("icon" => "side-menu-icons/gps.png", "sub_menu" => array(
+                        array("name" => "Review Questions", "permission" => "reviewQuestion.getList", "download" => false, "icon" => "side-menu-icons/one.png", "url" => "review-questions", "sub_menu" => array()),
+                        array("name" => "Polls", "is_quick_link" => true, "permission" => "poll.getList", "download" => false, "icon" => "side-menu-icons/one.png", "url" => "polls", "sub_menu" => array())
+                    )),
+//                "Learning Management System" => array("icon" => "side-menu-icons/gps.png", "sub_menu" => array(
+//                        array("name" => "Chapters", "is_quick_link" => true, "permission" => "chapter.getList", "download" => false, "icon" => "side-menu-icons/one.png", "url" => "chapters", "sub_menu" => array()),
+//                        array("name" => "Topics", "is_quick_link" => true, "permission" => "topic.getList", "download" => false, "icon" => "side-menu-icons/one.png", "url" => "topics", "sub_menu" => array()),
+//                        array("name" => "Study Materials", "permission" => "studyMaterial.getList", "download" => false, "icon" => "side-menu-icons/one.png", "url" => "study-materials", "sub_menu" => array()),
+//                        array("name" => "Syllabus", "permission" => "exam.viewSyllabus", "download" => false, "icon" => "side-menu-icons/one.png", "url" => "exam-syllabus", "sub_menu" => array())
+//                    )),
+                "Digital Content" => array("icon" => "side-menu-icons/gps.png", "sub_menu" => array(
+                        array("name" => "List", "permission" => "standard.getDigitalContent", "is_quick_link" => true, "download" => false, "icon" => "side-menu-icons/one.png", "url" => "videos-and-solutions", "sub_menu" => array())
+                    )),
+                "Staff Recruitment" => array("icon" => "side-menu-icons/gps.png", "sub_menu" => array(
+                        array("name" => "List", "permission" => "staffApplicationForm.getList", "is_quick_link" => false, "download" => false, "icon" => "side-menu-icons/one.png", "url" => "staff-recruitment-form", "sub_menu" => array())
+                    )),
+                "Project Management" => array("icon" => "side-menu-icons/gps.png", "sub_menu" => array(
+                        array("name" => "List", "permission" => "project.getList", "is_quick_link" => false, "download" => false, "icon" => "side-menu-icons/one.png", "url" => "projects", "sub_menu" => array()),
+                        array("name" => "Add Project", "permission" => "project.add", "download" => false, "icon" => "side-menu-icons/one.png", "url" => "add-project", "is_quick_link" => true, "sub_menu" => array())
+                    )),
+                "Programme Management" => array("icon" => "side-menu-icons/gps.png", "sub_menu" => array(
+                        array("name" => "List", "permission" => "programme.getList", "is_quick_link" => false, "download" => false, "icon" => "side-menu-icons/one.png", "url" => "programmes", "sub_menu" => array())
+                    ))
+            );
+        }
+        if (sizeof($products) > 0) {
+            foreach ($products as $product) {
+                $productData[] = $product['name'];
+            }
+        }
+        foreach ($productMenu as $productName => $productSubMenus) {
+            if (in_array($productName, $productData)) {
+                $finalSubMenu = $productSubMenus['sub_menu'];
+                $menu[] = array("name" => $productName, "permission" => "", "download" => false, "icon" => $productSubMenus['icon'], "url" => "#", "sub_menu" => $finalSubMenu);
+            }
+        }
+    }
+    $returnMenu = array("id" => $clientId, "menu" => $menu);
+    \jntreport\Auth\Auth::set('full_menu', $returnMenu);
+    return $returnMenu;
+}

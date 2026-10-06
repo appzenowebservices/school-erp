@@ -1,0 +1,48 @@
+# ---- Dependencies ----
+node_modules/
+
+# ---- Next.js build output ----
+.next/
+out/
+dist/
+build/
+
+# ---- Environment & secrets (NEVER commit) ----
+.env
+.env.local
+.env.*.local
+!.env.ai.example
+*.pem
+*.key
+*.p12
+
+# ---- Logs ----
+*.log
+hs-*.log
+
+# ---- Local machine helpers ----
+hs-web-start.cmd
+*.local.cmd
+
+# ---- Separate repos: agent runtime + memory layer (own remotes) ----
+ai-agent/
+ai-memory/
+
+# ---- OS / editors ----
+.DS_Store
+Thumbs.db
+desktop.ini
+.idea/
+.vscode/
+*.swp
+*~
+
+# ---- Test / coverage artifacts ----
+coverage/
+.nyc_output/
+
+# ---- Python (if any tooling sneaks in) ----
+__pycache__/
+*.pyc
+.venv/
+venv/

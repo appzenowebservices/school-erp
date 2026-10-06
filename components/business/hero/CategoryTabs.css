@@ -1,0 +1,63 @@
+.category-tabs-wrapper {
+  overflow-x: auto;
+  white-space: nowrap;
+  background: transparent;
+  padding: 10px 0;
+}
+
+.category-tabs {
+  display: flex;
+  align-items: space-around;
+  justify-content: space-around;
+
+  gap: 20px;
+  padding: 0 10px;
+  /* background: whitesmoke; */
+
+
+  /* min-width: max-content; */
+
+}
+
+.tab-button {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  background: transparent;
+  border: none;
+  color: rgb(86, 83, 83);
+  font-size: 14px;
+  cursor: pointer;
+  min-width: 70px;
+}
+
+.tab-button .icon {
+  margin-bottom: 4px;
+}
+
+.tab-button .label {
+  font-weight: 500;
+}
+
+.tab-button .underline {
+  position: absolute;
+  bottom: -2px;
+  height: 3px;
+  width: 100%;
+  background-color: rgb(86, 83, 83);
+  border-radius: 2px;
+}
+
+.sale-tag {
+  position: absolute;
+  top: 0;
+  right: 0;
+  background-color: red;
+  color: white;
+  font-size: 10px;
+  padding: 2px 4px;
+  border-radius: 5px;
+  font-weight: bold;
+}

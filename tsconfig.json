@@ -1,0 +1,37 @@
+{
+  "compilerOptions": {
+    "target": "ES2017",
+    "lib": [
+      "dom",
+      "dom.iterable",
+      "esnext"
+    ],
+    "allowJs": true,
+    "skipLibCheck": true,
+    "strict": false,
+    "noEmit": true,
+    "incremental": true,
+    "module": "esnext",
+    "esModuleInterop": true,
+    "moduleResolution": "node",
+    "resolveJsonModule": true,
+    "isolatedModules": true,
+    "jsx": "preserve",
+    "plugins": [
+      {
+        "name": "next"
+      }
+    ]
+  },
+  "include": [
+    "next-env.d.ts",
+    ".next/types/**/*.ts",
+    "**/*.ts",
+    "**/*.tsx"
+, "app/new-page/page.js", "components/studentManagement/listStudent.jsx", "components/OnlineFee/FeeSection.jsx", "components/profile/ProfileSelection.js", "components/staffManagement/AddStaffPersonalInfo.js", "components/staffManagement/addStaffForm.tsx", "components/OnlineFee/MarkFee.jsx", "components/OnlineFee/FeeCard.jsx", "components/OnlineFee/PaidFeeCard.jsx", "components/OnlineFee/FeeTypesStudentsTable.jsx"  ],
+  "exclude": [
+    "node_modules",
+    "ai-agent",
+    "ai-memory"
+  ]
+}
