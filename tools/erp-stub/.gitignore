@@ -1,0 +1,7 @@
+# Live-harvest artifacts and credentials — never commit.
+fixtures/
+harvest-ctx.json
+*.local.json
+.env
+*.log
+__pycache__/
