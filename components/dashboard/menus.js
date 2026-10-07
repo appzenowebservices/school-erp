@@ -114,11 +114,11 @@ const DashboardMenus = () => {
     const totalStudents = standards.reduce((sum, std) => {
       return (
         sum +
-        std.classes.reduce((clsSum, cls) => clsSum + (cls.students?.length || 0), 0)
+        (std.classes?.reduce((clsSum, cls) => clsSum + (cls.students?.length || 0), 0) || 0)
       );
     }, 0);
 
-    const totalStaff = staffCount.length;
+    const totalStaff = (staffCount || []).length;
 
     const activeClasses = standards.reduce(
       (sum, std) => sum + (std.classes?.length || 0),

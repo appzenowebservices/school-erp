@@ -188,8 +188,34 @@ def h_get_dashboard(body, con):
     prof = con.execute("SELECT * FROM profiles WHERE id=%s", (profile_id,)).fetchone() if profile_id else None
     all_sessions = con.execute(
         "SELECT * FROM sessions WHERE school_id=%s ORDER BY start_date DESC", (school["id"],)).fetchall()
-    standards = con.execute(
+    std_rows = con.execute(
         "SELECT id, name FROM standards WHERE school_id=%s ORDER BY sort_order", (school["id"],)).fetchall()
+    class_rows = con.execute(
+        """SELECT c.id, c.name, c.section, c.standard_id, t.id AS tid, t.name AS tname, t.phone AS tphone
+           FROM classes c LEFT JOIN staff t ON t.id=c.class_teacher_id
+           WHERE c.school_id=%s ORDER BY c.section""", (school["id"],)).fetchall()
+    classes_by_std: dict[str, list] = {}
+    for c in class_rows:
+        classes_by_std.setdefault(c["standard_id"], []).append(c)
+    stu_rows = con.execute(
+        "SELECT id, name, class_id FROM students WHERE session_id=%s ORDER BY roll_number",
+        (sess["id"],)).fetchall()
+    students_by_class: dict[str, list] = {}
+    for st in stu_rows:
+        students_by_class.setdefault(st["class_id"], []).append({"id": st["id"], "name": st["name"]})
+    standards = [{
+        "id": s["id"], "name": s["name"],
+        "classes": [{
+            "id": c["id"], "section": c["section"], "name": c["name"],
+            "class_teacher": ({"id": c["tid"], "name": c["tname"],
+                               "phones": [{"phone_number": c["tphone"], "is_registered": True}]}
+                              if c["tid"] else None),
+            "students": students_by_class.get(c["id"], []),
+        } for c in classes_by_std.get(s["id"], [])],
+        "exams": [],
+    } for s in std_rows]
+    users_out = [dict(r) for r in con.execute(
+        "SELECT id, name, role, designation FROM staff WHERE school_id=%s ORDER BY id", (school["id"],)).fetchall()]
     return {
         "id": school["id"], "is_subscription_available": True, "auto_increment_admission_number": "0",
         "allow_future_date_in_fee": "0", "auto_fee_receipt_download": "0",
@@ -205,8 +231,9 @@ def h_get_dashboard(body, con):
         "standards": standards,
         "classes": [dict(r) for r in con.execute(
             "SELECT id, name, section, standard_id FROM classes WHERE school_id=%s ORDER BY name", (school["id"],)).fetchall()],
-        "users": [], "members": [], "payment_modes": PAYMENT_MODES, "card_values": [],
+        "users": users_out, "members": [], "payment_modes": PAYMENT_MODES, "card_values": [],
         "field_sections": [], "enquiry_sources": [], "balance_reward_points": 0,
+        "percentage_of_app_users": 64.0, "number_of_app_users": "447", "attendance_data": None,
         "school": {
             "id": school["id"], "full_name": school["name"] + ", " + school["city"],
             "img_logo": school["logo_url"], "board": {"id": "2", "name": school["board"]},
